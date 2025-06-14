@@ -49,6 +49,11 @@ const navigation: NavItem[] = [
     href: "/settings",
     roles: [EmployeeRole.ADMIN, EmployeeRole.STUDENT_COUNSELOR],
   },
+  {
+    title: "Courses",
+    href: "/courses",
+    roles: [EmployeeRole.ADMIN, EmployeeRole.STUDENT_COUNSELOR],
+  },
 ]
 
 export function Sidebar() {

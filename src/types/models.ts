@@ -29,7 +29,7 @@ export enum RegistrationStatus {
 export interface Course {
   courseId: string;
   courseName: string;
-  category: CourseCategory;
+  category: string;
   courseFee: number;
   duration: string;
 }
@@ -89,4 +89,16 @@ export interface Payment {
   paymentDate: Date;
   paymentAmount: number;
   status: string;
+}
+
+export interface Sale {
+  saleId: string;
+  studentName: string;
+  courseId: string;
+  courseName: string;
+  amount: number;
+  paymentMethod: string;
+  paymentStatus: string;
+  saleDate: Date;
+  notes?: string;
 } 

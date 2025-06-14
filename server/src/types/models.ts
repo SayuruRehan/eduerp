@@ -89,4 +89,17 @@ export interface Payment {
   paymentDate: Date;
   paymentAmount: number;
   status: string;
+}
+
+export interface Sale {
+  saleId: string;
+  studentId: string;
+  studentName: string;
+  courseId: string;
+  courseName: string;
+  amount: number;
+  paymentMethod: string;
+  paymentStatus: string;
+  saleDate: Date;
+  notes?: string;
 } 

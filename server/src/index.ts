@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/users';
 import studentRoutes from './routes/students';
+import salesRoutes from './routes/sales';
+import coursesRoutes from './routes/courses';
 import pool from './config/db';
 
 dotenv.config();
@@ -26,6 +28,8 @@ pool.getConnection()
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/students', studentRoutes);
+app.use('/api/sales', salesRoutes);
+app.use('/api/courses', coursesRoutes);
 
 app.get('/', (req, res) => {
   res.send('EduERP Backend API');
