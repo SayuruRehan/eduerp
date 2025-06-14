@@ -97,6 +97,28 @@ class SalesService {
       throw error;
     }
   }
+
+  async importSalesFromCSV(file: File): Promise<{ success: number; failed: number; errors: string[] }> {
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch(`${API_BASE_URL}/sales/import`, {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.message || `HTTP error! status: ${response.status}`)
+      }
+
+      return await response.json()
+    } catch (error) {
+      console.error("Error importing sales:", error)
+      throw error
+    }
+  }
 }
 
 export const salesService = new SalesService(); 

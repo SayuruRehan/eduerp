@@ -25,6 +25,7 @@ import { ColumnDef } from "@/components/ui/data-table"
 import { salesService } from "@/services/salesService"
 import { toast } from "sonner"
 import { createContext, useContext } from 'react'
+import { ImportSalesDialog } from "@/components/sales/import-sales-dialog"
 
 interface AllSalesContextType {
   fetchSales: () => void
@@ -194,9 +195,12 @@ export default function AllSales() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold tracking-tight">Sales</h2>
-          <Button onClick={() => navigate("/sales/add")}>
-            Add Sale
-          </Button>
+          <div className="flex items-center gap-2">
+            <ImportSalesDialog />
+            <Button onClick={() => navigate("/sales/add")}>
+              Add Sale
+            </Button>
+          </div>
         </div>
         <DataTable
           columns={columns}

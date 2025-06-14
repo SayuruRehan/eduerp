@@ -1,8 +1,17 @@
 import { Sale } from "../types/models"
 import pool from "../config/db"
 import { Router, Request, Response } from 'express'
+import multer from 'multer'
+import csv from 'csv-parse'
+import { Readable } from 'stream'
+
+// Extend Express Request type to include file property
+interface MulterRequest extends Request {
+  file?: Express.Multer.File;
+}
 
 const router = Router()
+const upload = multer({ storage: multer.memoryStorage() })
 
 // Get all sales
 router.get('/', async (req: Request, res: Response) => {
@@ -147,6 +156,94 @@ router.delete('/:id', async (req: Request<{ id: string }>, res: Response) => {
   } catch (error) {
     console.error("Error deleting sale:", error)
     res.status(500).json({ message: "Failed to delete sale" })
+  }
+})
+
+// Import sales from CSV
+router.post('/import', upload.single('file'), async (req: Request & { file?: Express.Multer.File }, res: Response) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" })
+  }
+
+  const results: { success: number; failed: number; errors: string[] } = {
+    success: 0,
+    failed: 0,
+    errors: []
+  }
+
+  const parser = csv.parse({
+    columns: true,
+    skip_empty_lines: true,
+    trim: true
+  })
+
+  const readable = Readable.from(req.file.buffer)
+  const records: any[] = []
+
+  try {
+    for await (const record of readable.pipe(parser)) {
+      records.push(record)
+    }
+
+    // Get the highest saleId to generate new IDs
+    const [rows] = await pool.query(
+      "SELECT saleId FROM sales ORDER BY saleId DESC LIMIT 1"
+    )
+    const sales = rows as Sale[]
+    let nextSaleNum = 1
+    if (sales.length > 0) {
+      const lastId = sales[0].saleId
+      const lastNum = parseInt(lastId.replace('SALE', ''))
+      nextSaleNum = lastNum + 1
+    }
+
+    // Process each record
+    for (const record of records) {
+      try {
+        const newSaleId = `SALE${nextSaleNum.toString().padStart(3, '0')}`
+        nextSaleNum++
+
+        // Validate required fields
+        if (!record.studentName || !record.courseId || !record.courseName || 
+            !record.amount || !record.paymentMethod || !record.paymentStatus || !record.saleDate) {
+          throw new Error("Missing required fields")
+        }
+
+        // Convert saleDate to MySQL DATETIME format
+        const saleDate = new Date(record.saleDate)
+        if (isNaN(saleDate.getTime())) {
+          throw new Error("Invalid date format")
+        }
+
+        const saleDateMySQL = saleDate.toISOString().slice(0, 19).replace('T', ' ')
+
+        // Insert the record
+        await pool.query(
+          "INSERT INTO sales (saleId, studentName, courseId, courseName, amount, paymentMethod, paymentStatus, saleDate, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          [
+            newSaleId,
+            record.studentName,
+            record.courseId,
+            record.courseName,
+            parseFloat(record.amount),
+            record.paymentMethod,
+            record.paymentStatus,
+            saleDateMySQL,
+            record.notes || null
+          ]
+        )
+
+        results.success++
+      } catch (error) {
+        results.failed++
+        results.errors.push(`Row ${nextSaleNum}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      }
+    }
+
+    res.json(results)
+  } catch (error) {
+    console.error("Error processing CSV:", error)
+    res.status(500).json({ message: "Failed to process CSV file" })
   }
 })
 
