@@ -24,109 +24,7 @@ import { useNavigate } from "react-router-dom"
 import { ColumnDef } from "@/components/ui/data-table"
 import { userService } from "@/services/userService"
 import { toast } from "sonner"
-import React, { createContext, useContext } from 'react'
-
-const columns: ColumnDef<Employee>[] = [
-  {
-    accessorKey: "employeeId",
-    header: "Employee ID",
-  },
-  {
-    accessorKey: "empName",
-    header: "Name",
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "contactNumber",
-    header: "Contact",
-  },
-  {
-    accessorKey: "dateJoined",
-    header: "Date Joined",
-    cell: ({ row }: any) => {
-      const date = new Date(row.getValue("dateJoined"))
-      return date.toLocaleDateString()
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }: any) => {
-      const employee = row.original
-      const navigate = useNavigate()
-      const { fetchUsers } = useAllUsersContext()
-
-      const handleDelete = async () => {
-        try {
-          await userService.deleteUser(employee.employeeId)
-          toast.success("User deleted successfully")
-          fetchUsers()
-        } catch (error) {
-          toast.error("Failed to delete user")
-          console.error("Error deleting user:", error)
-        }
-      }
-
-      return (
-        <Dialog>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigate(`/users/view/${employee.employeeId}`)}
-              >
-                <Pencil className="mr-2 h-4 w-4" />
-                View
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => navigate(`/users/edit/${employee.employeeId}`)}
-              >
-                <Pencil className="mr-2 h-4 w-4" />
-                Edit
-              </DropdownMenuItem>
-              <DialogTrigger asChild>
-                <DropdownMenuItem
-                  onSelect={(e) => e.preventDefault()}
-                >
-                  <Trash className="mr-2 h-4 w-4" />
-                  Delete
-                </DropdownMenuItem>
-              </DialogTrigger>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete the
-                user and remove their data from our servers.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              <Button onClick={handleDelete}>Continue</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )
-    },
-  },
-]
+import { createContext } from 'react'
 
 interface AllUsersContextType {
   fetchUsers: () => void
@@ -134,18 +32,11 @@ interface AllUsersContextType {
 
 const AllUsersContext = createContext<AllUsersContextType | undefined>(undefined)
 
-const useAllUsersContext = () => {
-  const context = useContext(AllUsersContext)
-  if (context === undefined) {
-    throw new Error('useAllUsersContext must be used within an AllUsersProvider')
-  }
-  return context
-}
-
 export default function AllUsers() {
   const [users, setUsers] = useState<Employee[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const fetchUsers = async () => {
     setLoading(true)
@@ -167,6 +58,106 @@ export default function AllUsers() {
   useEffect(() => {
     fetchUsers()
   }, [])
+
+  const handleDelete = async (employeeId: string) => {
+    try {
+      await userService.deleteUser(employeeId)
+      toast.success("User deleted successfully")
+      fetchUsers()
+    } catch (error) {
+      toast.error("Failed to delete user")
+      console.error("Error deleting user:", error)
+    }
+  }
+
+  const columns: ColumnDef<Employee>[] = [
+    {
+      accessorKey: "employeeId",
+      header: "Employee ID",
+    },
+    {
+      accessorKey: "empName",
+      header: "Name",
+    },
+    {
+      accessorKey: "role",
+      header: "Role",
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
+    },
+    {
+      accessorKey: "contactNumber",
+      header: "Contact",
+    },
+    {
+      accessorKey: "dateJoined",
+      header: "Date Joined",
+      cell: ({ row }: any) => {
+        const date = new Date(row.getValue("dateJoined"))
+        return date.toLocaleDateString()
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }: any) => {
+        const employee = row.original
+
+        return (
+          <Dialog>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={() => navigate(`/users/view/${employee.employeeId}`)}
+                >
+                  <Pencil className="mr-2 h-4 w-4" />
+                  View
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => navigate(`/users/edit/${employee.employeeId}`)}
+                >
+                  <Pencil className="mr-2 h-4 w-4" />
+                  Edit
+                </DropdownMenuItem>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    <Trash className="mr-2 h-4 w-4" />
+                    Delete
+                  </DropdownMenuItem>
+                </DialogTrigger>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  user and remove their data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button onClick={() => handleDelete(employee.employeeId)}>Continue</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )
+      },
+    },
+  ]
 
   const handleExport = (rows: Employee[]) => {
     // Implement PDF export logic here
@@ -196,7 +187,7 @@ export default function AllUsers() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold tracking-tight">Users</h2>
-          <Button onClick={() => window.location.href = "/users/add"}>
+          <Button onClick={() => navigate("/users/add")}>
             Add User
           </Button>
         </div>
