@@ -35,6 +35,11 @@ const navigation: NavItem[] = [
     roles: [EmployeeRole.ADMIN, EmployeeRole.STUDENT_COUNSELOR],
   },
   {
+    title: "Batches",
+    href: "/batches",
+    roles: [EmployeeRole.ADMIN, EmployeeRole.STUDENT_COUNSELOR],
+  },
+  {
     title: "Certificates",
     href: "/certificates",
     roles: [EmployeeRole.ADMIN],

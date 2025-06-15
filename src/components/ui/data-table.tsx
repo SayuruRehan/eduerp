@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { DateRange } from "react-day-picker"
 
@@ -30,22 +30,22 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   searchKey: string
   onExport?: (selectedRows: TData[]) => void
-  onDateRangeChange?: (range: DateRange) => void
+  dateRange?: DateRange | undefined
+  onDateRangeChange?: (range: DateRange | undefined) => void
 }
+
+const EMPTY_DATE_RANGE: DateRange = { from: undefined, to: undefined };
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   searchKey,
   onExport,
+  dateRange,
   onDateRangeChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [dateRange, setDateRange] = useState<DateRange>({
-    from: undefined,
-    to: undefined,
-  })
 
   const table = useReactTable({
     data,
@@ -62,12 +62,6 @@ export function DataTable<TData, TValue>({
     },
   })
 
-  useEffect(() => {
-    if (onDateRangeChange) {
-      onDateRangeChange(dateRange)
-    }
-  }, [dateRange, onDateRangeChange])
-
   return (
     <div>
       <div className="flex items-center justify-between py-4">
@@ -82,8 +76,12 @@ export function DataTable<TData, TValue>({
         <div className="flex items-center gap-2">
           <DateRangePicker
             className="ml-auto"
-            dateRange={dateRange}
-            onChange={setDateRange}
+            dateRange={dateRange ?? EMPTY_DATE_RANGE}
+            onChange={(range) => {
+              if (onDateRangeChange) {
+                onDateRangeChange(range)
+              }
+            }}
           />
           {onExport && (
             <Button

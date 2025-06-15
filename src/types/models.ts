@@ -26,6 +26,13 @@ export enum RegistrationStatus {
   JOINED = 'Joined'
 }
 
+export enum Branch {
+  MORATUWA = 'Moratuwa',
+  BAMBALAPITIYA = 'Bambalapitiya',
+  GALLE = 'Galle',
+  ONLINE = 'Online'
+}
+
 export interface Course {
   courseId: string;
   courseName: string;
@@ -57,27 +64,28 @@ export interface Employee {
 
 export interface Batch {
   batchCode: string;
-  branch: string;
+  branch: Branch;
   courseName: string;
   lecturer: string;
   coordinator: string;
   noOfStudents: number;
   plannedDate: Date;
-  startDate: Date;
-  lockedDate: Date;
+  startDate?: Date;
+  lockedDate?: Date;
   status: BatchStatus;
 }
 
 export interface Registration {
   registrationId: string;
-  studentId: string;
+  studentName: string;
   courseId: string;
   courseName: string;
   batchCode: string;
-  branch: string;
+  branch: Branch;
   paymentType: string;
   paymentMethod: string;
   status: RegistrationStatus;
+  studentCounselor: string;
 }
 
 export interface Payment {

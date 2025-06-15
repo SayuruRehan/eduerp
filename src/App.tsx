@@ -16,6 +16,14 @@ import AllCourses from "@/pages/courses/all-courses"
 import { AddCourse } from "@/pages/courses/add-course"
 import { EditCourse } from "@/pages/courses/edit-course"
 import { ViewCourse } from "@/pages/courses/view-course"
+import AllRegistrations from "@/pages/registrations/all-registrations"
+import { AddRegistration } from "@/pages/registrations/add-registration"
+import { ViewRegistration } from "@/pages/registrations/view-registration"
+import { EditRegistration } from "@/pages/registrations/edit-registration"
+import AllBatches from "@/pages/batches/all-batches"
+import { AddBatch } from "@/pages/batches/add-batch"
+import { ViewBatch } from "@/pages/batches/view-batch"
+import { EditBatch } from "@/pages/batches/edit-batch"
 
 function App() {
   return (
@@ -38,6 +46,14 @@ function App() {
           <Route path="courses/add" element={<AddCourse />} />
           <Route path="courses/view/:id" element={<ViewCourse />} />
           <Route path="courses/edit/:id" element={<EditCourse />} />
+          <Route path="registrations" element={<AllRegistrations />} />
+          <Route path="registrations/add" element={<AddRegistration />} />
+          <Route path="registrations/view/:id" element={<ViewRegistration />} />
+          <Route path="registrations/edit/:id" element={<EditRegistration />} />
+          <Route path="batches" element={<AllBatches />} />
+          <Route path="batches/add" element={<AddBatch />} />
+          <Route path="batches/view/:id" element={<ViewBatch />} />
+          <Route path="batches/edit/:id" element={<EditBatch />} />
         </Route>
       </Routes>
     </Router>
