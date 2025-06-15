@@ -85,26 +85,32 @@ export default function AllStudents() {
     {
       accessorKey: "studentId",
       header: "Student ID",
+      enableSorting: true,
     },
     {
       accessorKey: "name",
       header: "Name",
+      enableSorting: true,
     },
     {
       accessorKey: "nic",
       header: "NIC",
+      enableSorting: true,
     },
     {
       accessorKey: "email",
       header: "Email",
+      enableSorting: true,
     },
     {
       accessorKey: "whatsappNumber",
       header: "WhatsApp",
+      enableSorting: true,
     },
     {
       accessorKey: "paymentDue",
       header: "Payment Due",
+      enableSorting: true,
       cell: ({ row }: any) => {
         const rawAmount = row.getValue("paymentDue")
         console.log("Raw paymentDue value:", rawAmount, "Type:", typeof rawAmount)
@@ -131,6 +137,7 @@ export default function AllStudents() {
     {
       accessorKey: "status",
       header: "Status",
+      enableSorting: true,
     },
     {
       id: "actions",

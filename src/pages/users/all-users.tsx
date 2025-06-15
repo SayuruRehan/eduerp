@@ -74,26 +74,32 @@ export default function AllUsers() {
     {
       accessorKey: "employeeId",
       header: "Employee ID",
+      enableSorting: true,
     },
     {
       accessorKey: "empName",
       header: "Name",
+      enableSorting: true,
     },
     {
       accessorKey: "role",
       header: "Role",
+      enableSorting: true,
     },
     {
       accessorKey: "email",
       header: "Email",
+      enableSorting: true,
     },
     {
       accessorKey: "contactNumber",
       header: "Contact",
+      enableSorting: true,
     },
     {
       accessorKey: "dateJoined",
       header: "Date Joined",
+      enableSorting: true,
       cell: ({ row }: any) => {
         const date = new Date(row.getValue("dateJoined"))
         return date.toLocaleDateString()

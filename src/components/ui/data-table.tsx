@@ -26,6 +26,7 @@ import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { DateRange } from "react-day-picker"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
+import { ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react"
 
 export type { ColumnDef }
 
@@ -196,13 +197,24 @@ export function DataTable<TData extends Record<string, any>, TValue>({
                 </TableHead>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    <TableHead 
+                      key={header.id}
+                      className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      <div className="flex items-center gap-2">
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                        {{
+                          asc: <ChevronUp className="h-4 w-4" />,
+                          desc: <ChevronDown className="h-4 w-4" />,
+                        }[header.column.getIsSorted() as string] ?? 
+                          (header.column.getCanSort() ? <ArrowUpDown className="h-4 w-4" /> : null)}
+                      </div>
                     </TableHead>
                   )
                 })}

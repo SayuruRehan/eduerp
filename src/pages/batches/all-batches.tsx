@@ -80,45 +80,55 @@ export default function AllBatches() {
     {
       accessorKey: "batchCode",
       header: "Batch Code",
+      enableSorting: true,
     },
     {
       accessorKey: "branch",
       header: "Branch",
+      enableSorting: true,
     },
     {
       accessorKey: "courseName",
       header: "Course",
+      enableSorting: true,
     },
     {
       accessorKey: "lecturer",
       header: "Lecturer",
+      enableSorting: true,
     },
     {
       accessorKey: "coordinator",
       header: "Coordinator",
+      enableSorting: true,
     },
     {
       accessorKey: "noOfStudents",
       header: "No. of Students",
+      enableSorting: true,
     },
     {
       accessorKey: "plannedDate",
       header: "Planned Date",
+      enableSorting: true,
       cell: ({ row }: any) => format(new Date(row.getValue("plannedDate")), "PPP"),
     },
     {
       accessorKey: "startDate",
       header: "Start Date",
+      enableSorting: true,
       cell: ({ row }: any) => row.getValue("startDate") ? format(new Date(row.getValue("startDate")), "PPP") : "N/A",
     },
     {
       accessorKey: "lockedDate",
       header: "Locked Date",
+      enableSorting: true,
       cell: ({ row }: any) => row.getValue("lockedDate") ? format(new Date(row.getValue("lockedDate")), "PPP") : "N/A",
     },
     {
       accessorKey: "status",
       header: "Status",
+      enableSorting: true,
     },
     {
       id: "actions",

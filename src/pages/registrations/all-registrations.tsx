@@ -84,34 +84,42 @@ export default function AllRegistrations() {
     {
       accessorKey: "registrationId",
       header: "Registration ID",
+      enableSorting: true,
     },
     {
       accessorKey: "studentName",
       header: "Student Name",
+      enableSorting: true,
     },
     {
       accessorKey: "courseName",
       header: "Course",
+      enableSorting: true,
     },
     {
       accessorKey: "batchCode",
       header: "Batch",
+      enableSorting: true,
     },
     {
       accessorKey: "branch",
       header: "Branch",
+      enableSorting: true,
     },
     {
       accessorKey: "paymentType",
       header: "Payment Type",
+      enableSorting: true,
     },
     {
       accessorKey: "status",
       header: "Status",
+      enableSorting: true,
     },
     {
       accessorKey: "studentCounselor",
       header: "Student Counselor",
+      enableSorting: true,
     },
     {
       id: "actions",

@@ -83,18 +83,22 @@ export default function AllSales() {
     {
       accessorKey: "saleId",
       header: "Sale ID",
+      enableSorting: true,
     },
     {
       accessorKey: "studentName",
       header: "Student Name",
+      enableSorting: true,
     },
     {
       accessorKey: "courseName",
       header: "Course",
+      enableSorting: true,
     },
     {
       accessorKey: "amount",
       header: "Amount",
+      enableSorting: true,
       cell: ({ row }) => {
         const amount = row.getValue("amount") as number
         return `Rs. ${amount.toFixed(2)}`
@@ -103,14 +107,17 @@ export default function AllSales() {
     {
       accessorKey: "paymentMethod",
       header: "Payment Method",
+      enableSorting: true,
     },
     {
       accessorKey: "paymentStatus",
       header: "Status",
+      enableSorting: true,
     },
     {
       accessorKey: "saleDate",
       header: "Date",
+      enableSorting: true,
       cell: ({ row }) => {
         const date = new Date(row.getValue("saleDate"))
         return date.toLocaleDateString()

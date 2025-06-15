@@ -64,22 +64,44 @@ export default function AllCertificates() {
   }
 
   const columns: ColumnDef<Certificate>[] = [
-    { accessorKey: "certificateId", header: "Certificate ID" },
-    { accessorKey: "studentName", header: "Student Name" },
-    { accessorKey: "courseName", header: "Course" },
-    { accessorKey: "batchCode", header: "Batch" },
+    { 
+      accessorKey: "certificateId", 
+      header: "Certificate ID",
+      enableSorting: true,
+    },
+    { 
+      accessorKey: "studentName", 
+      header: "Student Name",
+      enableSorting: true,
+    },
+    { 
+      accessorKey: "courseName", 
+      header: "Course",
+      enableSorting: true,
+    },
+    { 
+      accessorKey: "batchCode", 
+      header: "Batch",
+      enableSorting: true,
+    },
     { 
       accessorKey: "issueDate", 
       header: "Issue Date",
+      enableSorting: true,
       cell: ({ row }) => {
         const date = new Date(row.getValue("issueDate"))
         return date.toLocaleDateString()
       }
     },
-    { accessorKey: "certificateNumber", header: "Certificate Number" },
+    { 
+      accessorKey: "certificateNumber", 
+      header: "Certificate Number",
+      enableSorting: true,
+    },
     { 
       accessorKey: "status", 
       header: "Status",
+      enableSorting: true,
       cell: ({ row }) => {
         const status = row.getValue("status") as CertificateStatus
         return (
