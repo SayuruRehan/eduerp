@@ -24,6 +24,7 @@ import AllBatches from "@/pages/batches/all-batches"
 import { AddBatch } from "@/pages/batches/add-batch"
 import { ViewBatch } from "@/pages/batches/view-batch"
 import { EditBatch } from "@/pages/batches/edit-batch"
+import Settings from "@/pages/settings/settings"
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
           <Route path="batches/add" element={<AddBatch />} />
           <Route path="batches/view/:id" element={<ViewBatch />} />
           <Route path="batches/edit/:id" element={<EditBatch />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </Router>
