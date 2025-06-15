@@ -167,11 +167,6 @@ export default function AllSales() {
     },
   ]
 
-  const handleExport = (rows: Sale[]) => {
-    // Implement PDF export logic here
-    console.log("Exporting", rows)
-  }
-
   if (loading) {
     return <div className="p-4">Loading sales...</div>
   }
@@ -205,8 +200,7 @@ export default function AllSales() {
         <DataTable
           columns={columns}
           data={sales}
-          searchKey="studentName"
-          onExport={handleExport}
+          searchKey="saleId"
         />
       </div>
     </AllSalesContext.Provider>

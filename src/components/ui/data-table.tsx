@@ -8,6 +8,7 @@ import {
   getSortedRowModel,
   useReactTable,
   getPaginationRowModel,
+  RowSelectionState,
 } from "@tanstack/react-table"
 import {
   Table,
@@ -22,6 +23,8 @@ import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { DateRange } from "react-day-picker"
+import { Checkbox } from "@/components/ui/checkbox"
+import { toast } from "sonner"
 
 export type { ColumnDef }
 
@@ -29,23 +32,22 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   searchKey: string
-  onExport?: (selectedRows: TData[]) => void
   dateRange?: DateRange | undefined
   onDateRangeChange?: (range: DateRange | undefined) => void
 }
 
 const EMPTY_DATE_RANGE: DateRange = { from: undefined, to: undefined };
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends Record<string, any>, TValue>({
   columns,
   data,
   searchKey,
-  onExport,
   dateRange,
   onDateRangeChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
   const table = useReactTable({
     data,
@@ -56,11 +58,55 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
+      rowSelection,
     },
+    enableRowSelection: true,
   })
+
+  const handleExportCSV = () => {
+    const selectedRows = table.getSelectedRowModel().rows.map(row => row.original)
+    if (selectedRows.length === 0) {
+      toast.error("Please select at least one row to export")
+      return
+    }
+
+    // Get headers from the first row
+    const headers = Object.keys(selectedRows[0])
+    
+    // Create CSV content
+    const csvContent = [
+      headers.join(','), // Header row
+      ...selectedRows.map(row => 
+        headers.map(header => {
+          const value = row[header]
+          // Handle special cases like dates and numbers
+          if (value instanceof Date) {
+            return value.toISOString()
+          }
+          // Escape commas and quotes in string values
+          if (typeof value === 'string') {
+            return `"${value.replace(/"/g, '""')}"`
+          }
+          return value
+        }).join(',')
+      )
+    ].join('\n')
+
+    // Create and download the file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    link.setAttribute('href', url)
+    link.setAttribute('download', 'export.csv')
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   return (
     <div>
@@ -83,14 +129,13 @@ export function DataTable<TData, TValue>({
               }
             }}
           />
-          {onExport && (
-            <Button
-              onClick={() => onExport(table.getSelectedRowModel().rows.map(row => row.original))}
-              variant="outline"
-            >
-              Export Selected
-            </Button>
-          )}
+          <Button
+            onClick={handleExportCSV}
+            variant="outline"
+            disabled={table.getSelectedRowModel().rows.length === 0}
+          >
+            Export Selected to CSV
+          </Button>
         </div>
       </div>
       <div className="rounded-md border">
@@ -98,6 +143,13 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
+                <TableHead className="w-[50px]">
+                  <Checkbox
+                    checked={table.getIsAllRowsSelected()}
+                    onCheckedChange={(value: boolean) => table.toggleAllRowsSelected(value)}
+                    aria-label="Select all"
+                  />
+                </TableHead>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -120,6 +172,13 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
+                  <TableCell>
+                    <Checkbox
+                      checked={row.getIsSelected()}
+                      onCheckedChange={(value: boolean) => row.toggleSelected(value)}
+                      aria-label="Select row"
+                    />
+                  </TableCell>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -133,7 +192,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columns.length + 1}
                   className="h-24 text-center"
                 >
                   No results.

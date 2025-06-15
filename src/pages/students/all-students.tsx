@@ -192,10 +192,6 @@ export default function AllStudents() {
     },
   ]
 
-  const handleExport = (rows: Student[]) => {
-    console.log("Exporting students:", rows)
-  }
-
   console.log("Current state:", { loading, error, studentsCount: students.length })
 
   if (loading) {
@@ -229,7 +225,6 @@ export default function AllStudents() {
           columns={columns}
           data={students}
           searchKey="name"
-          onExport={handleExport}
         />
       </div>
     </AllStudentsContext.Provider>

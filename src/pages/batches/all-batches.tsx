@@ -180,15 +180,6 @@ export default function AllBatches() {
     },
   ]
 
-  const handleExport = (rows: Batch[]) => {
-    console.log("Exporting batches:", rows)
-  }
-
-  const handleDateRangeChange = (range: DateRange | undefined) => {
-    setDateRange(range)
-    // TODO: Implement filtering logic based on dateRange
-  }
-
   if (loading) {
     return <div className="p-4">Loading batches...</div>
   }
@@ -220,9 +211,8 @@ export default function AllBatches() {
           columns={columns}
           data={batches}
           searchKey="batchCode"
-          onExport={handleExport}
           dateRange={dateRange}
-          onDateRangeChange={handleDateRangeChange}
+          onDateRangeChange={setDateRange}
         />
       </div>
     </AllBatchesContext.Provider>

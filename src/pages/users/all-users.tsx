@@ -159,11 +159,6 @@ export default function AllUsers() {
     },
   ]
 
-  const handleExport = (rows: Employee[]) => {
-    // Implement PDF export logic here
-    console.log("Exporting", rows)
-  }
-
   if (loading) {
     return <div className="p-4">Loading users...</div>
   }
@@ -195,7 +190,6 @@ export default function AllUsers() {
           columns={columns}
           data={users}
           searchKey="empName"
-          onExport={handleExport}
         />
       </div>
     </AllUsersContext.Provider>

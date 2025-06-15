@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, useCallback, useRef } from "react"
+import { useState, useEffect, createContext, useContext, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { ColumnDef, DataTable } from "@/components/ui/data-table"
@@ -173,22 +173,6 @@ export default function AllRegistrations() {
     },
   ]
 
-  const handleExport = (rows: Registration[]) => {
-    console.log("Exporting registrations:", rows)
-  }
-
-  const handleDateRangeChange = useCallback((range: DateRange | undefined) => {
-    const currentFrom = dateRangeRef.current?.from?.getTime();
-    const currentTo = dateRangeRef.current?.to?.getTime();
-    const newFrom = range?.from?.getTime();
-    const newTo = range?.to?.getTime();
-
-    if (currentFrom !== newFrom || currentTo !== newTo) {
-      setDateRange(range);
-      // TODO: Implement filtering logic based on dateRange
-    }
-  }, [])
-
   if (loading) {
     return <div className="p-4">Loading registrations...</div>
   }
@@ -219,10 +203,9 @@ export default function AllRegistrations() {
         <DataTable
           columns={columns}
           data={registrations}
-          searchKey="courseName"
-          onExport={handleExport}
+          searchKey="registrationId"
           dateRange={dateRange}
-          onDateRangeChange={handleDateRangeChange}
+          onDateRangeChange={setDateRange}
         />
       </div>
     </AllRegistrationsContext.Provider>
