@@ -24,6 +24,10 @@ import AllBatches from "@/pages/batches/all-batches"
 import { AddBatch } from "@/pages/batches/add-batch"
 import { ViewBatch } from "@/pages/batches/view-batch"
 import { EditBatch } from "@/pages/batches/edit-batch"
+import AllCertificates from "@/pages/certificates/all-certificates"
+import { AddCertificate } from "@/pages/certificates/add-certificate"
+import { ViewCertificate } from "@/pages/certificates/view-certificate"
+import { EditCertificate } from "@/pages/certificates/edit-certificate"
 import Settings from "@/pages/settings/settings"
 
 function App() {
@@ -55,6 +59,10 @@ function App() {
           <Route path="batches/add" element={<AddBatch />} />
           <Route path="batches/view/:id" element={<ViewBatch />} />
           <Route path="batches/edit/:id" element={<EditBatch />} />
+          <Route path="certificates" element={<AllCertificates />} />
+          <Route path="certificates/add" element={<AddCertificate />} />
+          <Route path="certificates/view/:id" element={<ViewCertificate />} />
+          <Route path="certificates/edit/:id" element={<EditCertificate />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>

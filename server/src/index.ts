@@ -7,6 +7,7 @@ import salesRoutes from './routes/sales';
 import coursesRoutes from './routes/courses';
 import registrationRoutes from './routes/registrations';
 import batchesRoutes from './routes/batches';
+import certificatesRouter from './routes/certificates';
 import pool from './config/db';
 
 dotenv.config();
@@ -34,6 +35,7 @@ app.use('/api/sales', salesRoutes);
 app.use('/api/courses', coursesRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/batches', batchesRoutes);
+app.use('/api/certificates', certificatesRouter);
 
 app.get('/', (req, res) => {
   res.send('EduERP Backend API');

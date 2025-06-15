@@ -33,6 +33,12 @@ export enum Branch {
   ONLINE = 'Online'
 }
 
+export enum CertificateStatus {
+  ISSUED = 'Issued',
+  PENDING = 'Pending',
+  REJECTED = 'Rejected'
+}
+
 export interface Course {
   courseId: string;
   courseName: string;
@@ -109,4 +115,17 @@ export interface Sale {
   paymentStatus: string;
   saleDate: Date;
   notes?: string;
+}
+
+export interface Certificate {
+  certificateId: string;
+  studentId: string;
+  studentName: string;
+  courseId: string;
+  courseName: string;
+  batchCode: string;
+  issueDate: Date;
+  certificateNumber: string;
+  status: CertificateStatus;
+  remarks?: string;
 } 
