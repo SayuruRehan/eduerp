@@ -213,6 +213,7 @@ export default function AllBatches() {
           searchKey="batchCode"
           dateRange={dateRange}
           onDateRangeChange={setDateRange}
+          dateColumnKey="plannedDate"
         />
       </div>
     </AllBatchesContext.Provider>

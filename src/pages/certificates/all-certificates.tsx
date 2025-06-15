@@ -24,12 +24,14 @@ import { useNavigate } from "react-router-dom"
 import { ColumnDef } from "@/components/ui/data-table"
 import { certificateService } from "@/services/certificateService"
 import { toast } from "sonner"
+import { DateRange } from "react-day-picker"
 
 export default function AllCertificates() {
   const [certificates, setCertificates] = useState<Certificate[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
 
   const fetchCertificates = async () => {
     setLoading(true)
@@ -150,7 +152,14 @@ export default function AllCertificates() {
         <h2 className="text-3xl font-bold tracking-tight">Certificates</h2>
         <Button onClick={() => navigate("/certificates/add")}>Add Certificate</Button>
       </div>
-      <DataTable columns={columns} data={certificates} searchKey="studentName" />
+      <DataTable
+        columns={columns}
+        data={certificates}
+        searchKey="certificateId"
+        dateRange={dateRange}
+        onDateRangeChange={setDateRange}
+        dateColumnKey="issueDate"
+      />
     </div>
   )
 } 

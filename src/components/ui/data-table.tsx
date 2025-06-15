@@ -9,6 +9,7 @@ import {
   useReactTable,
   getPaginationRowModel,
   RowSelectionState,
+  FilterFn,
 } from "@tanstack/react-table"
 import {
   Table,
@@ -20,7 +21,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { DateRange } from "react-day-picker"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -34,9 +35,28 @@ interface DataTableProps<TData, TValue> {
   searchKey: string
   dateRange?: DateRange | undefined
   onDateRangeChange?: (range: DateRange | undefined) => void
+  dateColumnKey?: string
 }
 
 const EMPTY_DATE_RANGE: DateRange = { from: undefined, to: undefined };
+
+// Custom filter function for date range
+const dateRangeFilter: FilterFn<any> = (row, columnId, filterValue: DateRange) => {
+  if (!filterValue?.from && !filterValue?.to) return true;
+  
+  const date = new Date(row.getValue(columnId));
+  const from = filterValue.from ? new Date(filterValue.from) : null;
+  const to = filterValue.to ? new Date(filterValue.to) : null;
+  
+  if (from && to) {
+    return date >= from && date <= to;
+  } else if (from) {
+    return date >= from;
+  } else if (to) {
+    return date <= to;
+  }
+  return true;
+};
 
 export function DataTable<TData extends Record<string, any>, TValue>({
   columns,
@@ -44,13 +64,34 @@ export function DataTable<TData extends Record<string, any>, TValue>({
   searchKey,
   dateRange,
   onDateRangeChange,
+  dateColumnKey,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
+  // Filter data based on date range
+  const filteredData = useMemo(() => {
+    if (!dateRange?.from && !dateRange?.to || !dateColumnKey) return data;
+    
+    return data.filter(item => {
+      const date = new Date(item[dateColumnKey]);
+      const from = dateRange.from ? new Date(dateRange.from) : null;
+      const to = dateRange.to ? new Date(dateRange.to) : null;
+      
+      if (from && to) {
+        return date >= from && date <= to;
+      } else if (from) {
+        return date >= from;
+      } else if (to) {
+        return date <= to;
+      }
+      return true;
+    });
+  }, [data, dateRange, dateColumnKey]);
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -65,6 +106,9 @@ export function DataTable<TData extends Record<string, any>, TValue>({
       rowSelection,
     },
     enableRowSelection: true,
+    filterFns: {
+      dateRange: dateRangeFilter,
+    },
   })
 
   const handleExportCSV = () => {

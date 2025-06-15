@@ -26,6 +26,7 @@ import { salesService } from "@/services/salesService"
 import { toast } from "sonner"
 import { createContext, useContext } from 'react'
 import { ImportSalesDialog } from "@/components/sales/import-sales-dialog"
+import { DateRange } from "react-day-picker"
 
 interface AllSalesContextType {
   fetchSales: () => void
@@ -46,6 +47,7 @@ export default function AllSales() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
 
   const fetchSales = async () => {
     setLoading(true)
@@ -201,6 +203,9 @@ export default function AllSales() {
           columns={columns}
           data={sales}
           searchKey="saleId"
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+          dateColumnKey="saleDate"
         />
       </div>
     </AllSalesContext.Provider>

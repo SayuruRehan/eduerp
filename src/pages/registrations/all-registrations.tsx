@@ -206,6 +206,7 @@ export default function AllRegistrations() {
           searchKey="registrationId"
           dateRange={dateRange}
           onDateRangeChange={setDateRange}
+          dateColumnKey="registrationDate"
         />
       </div>
     </AllRegistrationsContext.Provider>
